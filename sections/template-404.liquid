@@ -1,0 +1,16 @@
+<h1 class="text-[78px] text-center">{{ schema.settings.404_title }}</h1>
+<h2 class="text-[48px] text-center">The page you're trying to access doesn't exist</h2>
+
+{% schema %}
+  {
+    "name": "404 page",
+    "settings": [
+      {
+        "type": "text",
+        "id": "404_title",
+        "label": "Title for 404 page",
+        "default": "Error 404"
+      }
+    ]
+  }
+{% endschema %}
