@@ -24,6 +24,8 @@
   {% if blog.comments_enabled? %}
     <div id="comments" class="flex flex-col gap-2">
       <h2 class="text-xl extra-bold">Comments</h2>
+
+
       {% if article.comments_count < 1 %}
         <div class="bg-gray-800/25 rounded-md p-[16px]">
           There are no comments in this artice
@@ -32,18 +34,28 @@
         {% paginate article.comments by 5 %}
           {% for comment in article.comments %}
             <div class="bg-blue-500/35 rounded-md p-[16px]">
-              {{ comment.body }}
+              {{ comment.content }}
               <span class="text-right">
                 <bold>{{ comment.author }}</bold>
                 {{ comment.created_at | date: format: 'default' }}
               </span>
             </div>
           {% endfor %}
+          {% if paginate.pages > 1 %}
+            <div>
+              {{ paginate | default_pagination }}
+            </div>
+          {% endif %}
         {% endpaginate %}
       {% endif %}
     </div>
 
     <div id="comment_form">
+      {% if form.errors %}
+        <strong class="bold text-red-500">Sorry, there was an error and your comment wasn't posted!</strong>
+      {% elsif form.posted_successfully? %}
+        <strong class="bold text-green-500">Your comment was posted succesfully!</strong>
+      {% endif %}
       {% form 'new_comment'
         , article %}
         <div class="flex flex-wrap gap-4 wrap mt-10">
