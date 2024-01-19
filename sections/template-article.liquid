@@ -51,13 +51,13 @@
     </div>
 
     <div id="comment_form">
-      {% if form.errors %}
-        <strong class="bold text-red-500">Sorry, there was an error and your comment wasn't posted!</strong>
-      {% elsif form.posted_successfully? %}
-        <strong class="bold text-green-500">Your comment was posted succesfully!</strong>
-      {% endif %}
       {% form 'new_comment'
         , article %}
+        {% if form.errors %}
+          <strong class="bold text-red-500">Sorry, there was an error and your comment wasn't posted!</strong>
+        {% elsif form.posted_successfully? %}
+          <strong class="bold text-green-500">Your comment was posted succesfully!</strong>
+        {% endif %}
         <div class="flex flex-wrap gap-4 wrap mt-10">
           <label for="comment_author">Name
             <input
