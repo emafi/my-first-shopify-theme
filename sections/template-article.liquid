@@ -1,11 +1,97 @@
-<h1>
-  {{ article.title }}
-</h1>
-<small>{{ article.author }}</small>
+<article class="p-[32px]">
+  <div class=" h-[500px] overflow-hidden rounded-xl relative">
+    <div class="z-[3] relative flex flex-col justify-between h-full">
+      <h1 class="text-5xl text-white text font-bold pt-[30px] px-[30px]">
+        {{ article.title }}
+      </h1>
+      <div class="text-right bg-white/65 py-[16px] px-[30px]">
+        <time datetime="{{article.published_at | date: '%Y-%m-%d'}}">{{ article.published_at | date: '%Y-%m-%d' }}</time>
+        <br/>
+        <span rel="author">{{ article.author }}</span>
+        <br/>
+      </div>
+    </div>
+    <img
+      loading="lazy"
+      src="{{ article.image |  img_url: 'master'  }}"
+      src="{{ article.image.alt  }}"
+      class="w-full h-full object-cover absolute top-0 bottom-0 left-0 right-0"
+      alt="{{article.image.alt}}" />
+  </div>
+  <div class="mt-[32px]">{{ article.content }}</div>
+  <span>{{ section.settings.thank_you_for_reading_text }}</span>
+
+  {% if blog.comments_enabled? %}
+    <div id="comments" class="flex flex-col gap-2">
+      <h2 class="text-xl extra-bold">Comments</h2>
+      {% if article.comments_count < 1 %}
+        <div class="bg-gray-800/25 rounded-md p-[16px]">
+          There are no comments in this artice
+        </div>
+      {% else %}
+        {% paginate article.comments by 5 %}
+          {% for comment in article.comments %}
+            <div class="bg-blue-500/35 rounded-md p-[16px]">
+              {{ comment.body }}
+              <span class="text-right">
+                <bold>{{ comment.author }}</bold>
+                {{ comment.created_at | date: format: 'default' }}
+              </span>
+            </div>
+          {% endfor %}
+        {% endpaginate %}
+      {% endif %}
+    </div>
+
+    <div id="comment_form">
+      {% form 'new_comment'
+        , article %}
+        <div class="flex flex-wrap gap-4 wrap mt-10">
+          <label for="comment_author">Name
+            <input
+              class="border-solid border-2 border-black"
+              type="text"
+              id="comment_author"
+              name="comment[author]">
+          </label>
+          <label for="comment_email">Email
+            <input
+              class="border-solid border-2 border-black"
+              type="text"
+              id="comment_email"
+              name="comment[email]" />
+          </label>
+          <label for="comment_content" class="w-full">
+            <textarea
+              rows="4"
+              class="border-solid border-2 border-black w-full"
+              type="text"
+              id="comment_content"
+              name="comment[body]"
+              required
+              aria-required="true"></textarea>
+          </label>
+          <input
+            type="submit"
+            class="w-full bg-green-500 text-white cursor-pointer hover:bg-green-300 rounded-lg p-4"
+            value="Post comment">
+        </div>
+      {% endform %}
+    </div>
+  {% endif %}
+</article>
+
 
 {% schema %}
   {
-    "name": "article",
-    "settings": []
+    "name": "Article page",
+    "settings": [
+      {
+        "type": "text",
+        "id": "thank_you_for_reading_text",
+        "label": "A small sentence to be displayed at the end of every article",
+        "default": "Thank you for reading!"
+      }
+    ]
   }
 {% endschema %}
