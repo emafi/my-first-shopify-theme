@@ -1,14 +1,17 @@
-<article class="p-[32px]">
+<article
+  class="p-[32px]"
+  itemscope
+  itemtype="https://schema.org/BlogPosting">
   <div class=" h-[500px] overflow-hidden rounded-xl relative">
     <div class="z-[3] relative flex flex-col justify-between h-full">
-      <h1 class="text-5xl text-white text font-bold pt-[30px] px-[30px]">
+      <h1 class="text-5xl text-white text font-bold pt-[30px] px-[30px]" itemprop="headline">
         {{ article.title }}
       </h1>
       <div class="text-right bg-white/65 py-[16px] px-[30px]">
-        <time datetime="{{article.published_at | date: '%Y-%m-%d'}}">{{ article.published_at | date: '%Y-%m-%d' }}</time>
-        <br/>
-        <span rel="author">{{ article.author }}</span>
-        <br/>
+        <time itemprop="datePublished dateCreated" datetime="{{article.published_at | date: '%Y-%m-%d'}}">{{ article.published_at | date: '%Y-%m-%d' }}</time>
+        <div itemscope itemtype="https://schema.org/Person">
+          <span rel="author" itemprop="author">{{ article.author }}</span>
+        </div>
       </div>
     </div>
     <img
@@ -16,9 +19,10 @@
       src="{{ article.image |  img_url: 'master'  }}"
       src="{{ article.image.alt  }}"
       class="w-full h-full object-cover absolute top-0 bottom-0 left-0 right-0"
-      alt="{{article.image.alt}}" />
+      alt="{{article.image.alt}}"
+      itemprop="image" />
   </div>
-  <div class="mt-[32px]">{{ article.content }}</div>
+  <div class="mt-[32px]" itemprop="articleBody">{{ article.content }}</div>
   <span>{{ section.settings.thank_you_for_reading_text }}</span>
 
   {% if blog.comments_enabled? %}
@@ -98,6 +102,31 @@
     </div>
   {% endif %}
 </article>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org/",
+    "@type": "BlogPosting",
+    "headline": {{ article.title | json }},
+    "articleBody": {{ article.content |  strip_html | json }},
+    {% if article.excerpt != 'blank' %}
+      "description": {{ article.excerpt |  strip_html | json }},
+      {% endif %}
+      {% if article.image %}
+        "image" : [{{ article.image |  img_url: "medium" | prepend: 'https:' | json }}],
+        {% endif %}
+        "datePublished": {{ article.published_at | date: format: 'default' | json }},
+        "dateCreated": {{ article.created_at | date: format: 'default' | json }},
+        "author": {
+          "@type": "person",
+          "name": {{ article.author | json }}
+        },
+        "publisher": {
+          "@type": "organization",
+          "name": {{ shop.name | json }}
+        }
+      }
+</script>
 
 
 {% schema %}
