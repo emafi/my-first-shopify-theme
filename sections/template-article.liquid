@@ -45,11 +45,9 @@
               </span>
             </div>
           {% endfor %}
-          {% if paginate.pages > 1 %}
-            <div>
-              {{ paginate | default_pagination }}
-            </div>
-          {% endif %}
+          <div class="max-w-6xl mx-auto">
+            {% render 'pagination' %}
+          </div>
         {% endpaginate %}
       {% endif %}
     </div>
