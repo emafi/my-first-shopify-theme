@@ -4,7 +4,7 @@
       <div class="h-80 overflow-hidden">
         <img
           class="w-full h-full object-cover transition duration-[600] ease-in-out hover:scale-105 transform"
-          src="{{ product.featured_image | img_url: 'medium' }}"
+          src="{{ product.featured_image | image_url: width: 480 }}"
           alt="{{ product.featured_image.alt }}">
       </div>
     {% else %}

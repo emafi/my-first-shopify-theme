@@ -1,0 +1,7 @@
+<div class="bg-green-500 py-4 px-3">
+  <h1>{{ product.title }}</h1>
+  {% for media in product.media %}
+    {% render 'product-media'
+      , media: media %}
+  {% endfor %}
+</div>
